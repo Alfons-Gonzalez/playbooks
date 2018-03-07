@@ -1,0 +1,40 @@
+---
+
+- hosts: lowmem
+
+  remote_user: root
+  tasks:
+
+  - name: Afegim el repo de docker
+    yum_repository:
+      name: docker-ce
+      state: present
+      description: Docker Repository
+      gpgcheck: yes
+      gpgkey: https://download.docker.com/linux/centos/gpg 
+      baseurl: https://download.docker.com/linux/centos/7/$basearch/stable
+
+  - name: Instal.lem Docker Community Edition
+    yum:
+      name: docker-ce
+      state: present
+  
+  - name: Creem el directory /etc/docker
+    file:
+      path: /etc/docker
+      state: directory
+
+  - name: Creem el fitxer de configuracio per el storage
+    copy: 
+      src: /root/test/daemon.json
+      dest: /etc/docker/daemon.json
+
+  - name: engeguem el servei i el configurem per que arrenqui
+    systemd:
+      name: docker
+      state: started
+      enabled: yes
+
+
+      
+      

@@ -1,0 +1,19 @@
+---
+
+- hosts: nodes
+
+  remote_user: root
+  tasks:
+
+
+  - name: fitxer de config igual a tots els nodes
+    copy: src=/usr/local/slurm/etc/slurm.conf dest=/usr/local/slurm/etc/slurm.conf
+  - name: configuracio cgroups I
+    copy: src=/usr/local/slurm/etc/cgroup.conf dest=/usr/local/slurm/etc/cgroup.conf
+  - name: configuracio cgroup II
+    copy: src=/usr/local/slurm/etc/cgroup_allowed_devices_file.conf dest=/usr/local/slurm/etc/cgroup_allowed_devices_file.conf
+
+  - name: engeguem el servei
+    service: name=slurmd state=restarted
+
+

@@ -1,0 +1,34 @@
+---
+
+- hosts: lowmem
+
+  remote_user: root
+  tasks:
+
+  - name: Aturem el servei i el configurem per que no arrenqui
+    systemd:
+      name: docker
+      state: stopped
+      enabled: no
+
+  - name: eliminem el fitxer de configuracio
+    file:
+      path: /etc/docker
+      state: absent
+      
+  - name: Desinstal.lem Docker Community Edition
+    yum:
+      name: docker-ce
+      state: absent
+
+  - name: Eliminem  el repo de docker
+    yum_repository:
+      name: docker-ce
+      state: absent
+  
+
+
+
+
+      
+      
