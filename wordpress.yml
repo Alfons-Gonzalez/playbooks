@@ -1,0 +1,30 @@
+version: '3.2'
+
+services:
+
+  wordpress:
+    image: wordpress
+    restart: always
+    container_name: wordpress
+    depends_on:
+      - mysql
+    ports:
+      - 80:80
+    privileged: true
+    volumes:
+      - ./wp-content:/var/www/html/wp-content
+    links:
+      - mysql
+    environment:
+      WORDPRESS_DB_PASSWORD: whatever
+
+  mysql:
+    image: mysql
+    restart: always
+    container_name: mysql
+    volumes:
+     - ./db_data:/var/lib/mysql
+    expose:
+     - 3306
+    environment:
+      MYSQL_ROOT_PASSWORD: whatever
