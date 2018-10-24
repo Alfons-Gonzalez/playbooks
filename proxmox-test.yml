@@ -1,0 +1,12 @@
+- hosts: pve
+  remote_user: root
+  tasks:
+
+   - proxmox_kvm:
+      api_user    : root@pam
+      api_password: x2+y2=1
+      api_host    : pve2
+      name        : kubo
+      node        : pve2
+      state       : started
+
