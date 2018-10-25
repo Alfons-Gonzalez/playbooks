@@ -1,0 +1,31 @@
+- hosts: pve
+  remote_user: root
+  name: test per crear una VM clonant el template
+  tasks:
+
+   - name: creem la maquina Virtual, 
+     proxmox_kvm:
+      api_user    : root@pam
+      api_password: x2+y2=1
+      api_host    : pve2
+      node        : pve2
+      clone       : centos7w3
+      name        : testclone
+      full        : yes
+      storage     : store1
+      format      : raw
+      onboot      : yes
+      state       : present
+      timeout     : 600 # per evitar que doni timeout, la tasca triga una estona en acabar
+
+
+   - name: engeguem la VM
+     proxmox_kvm:
+      api_user    : root@pam
+      api_password: x2+y2=1
+      api_host    : pve2
+      node        : pve2
+      name        : testclone
+      state       : started
+
+
