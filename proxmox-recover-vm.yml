@@ -1,0 +1,39 @@
+- hosts: pve2
+  remote_user: root
+  name: test per recrear una VM a partir del disc existent 
+  tasks:
+
+   - name: creem la maquina Virtual, teniem una copia del disk i coneixem configuracio i mac address
+     proxmox_kvm:
+      api_user    : root@pam
+      api_password: x2+y2=1
+      api_host    : pve2
+      node        : pve2
+      name        : dock2
+      vmid        : 126
+      ostype      : l26
+      onboot      : yes
+      keyboard    : es
+      kvm         : yes
+      memory      : 512
+      cores       : 1
+      sata        : '{"sata0":"store1:8,format=raw" }'
+      net         : '{"net0":"virtio=EA:5B:1B:F6:77:86,bridge=vmbr0"}' 
+      state       : present
+
+   - name: un cop creada substituim el disc que ha creat pel de la copia
+     shell: |
+        cp /root/vm-126-disk-1.raw /mnt/pve/store1/images/126/vm-126-disk-1.raw
+        exit 0     
+
+
+   - name: engeguem la VM
+     proxmox_kvm:
+      api_user    : root@pam
+      api_password: x2+y2=1
+      api_host    : pve2
+      node        : pve2
+      name        : dock2
+      state       : started
+
+
