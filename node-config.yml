@@ -1,0 +1,119 @@
+- hosts: metro_cluster
+
+  remote_user: root
+  tasks:
+
+  - name: assegurem regles de firewall per la 172.20.16.
+    firewalld:
+      rich_rule: 'rule family=ipv4 source address=172.20.16.0/24 accept'
+      permanent: true
+      state: enabled
+
+  - name: assegurem regles de firewall per la 192.168.20. 
+    firewalld:
+      rich_rule: 'rule family=ipv4 source address=192.168.20.0/24 accept'
+      permanent: true
+      state: enabled
+  
+  - name: client de NIS instal.lat
+    yum: name=ypbind state=present
+  
+  - name: nis config
+    copy: src=/root/metro-cluster-yp.conf dest=/etc/yp.conf
+
+  - name: nsswitch
+    copy: src=/root/metro-cluster-nsswitch.conf dest=/etc/nsswitch.conf
+
+  - name: client de NIS engegat
+    service: name=ypbind state=started
+
+  - name: copiem el fitxer per crear homes usuaris
+    copy: src=/root/scripts/create-homes.sh dest=/root/create-homes.sh
+
+  - name: creem els homes
+    command: sh /root/create-homes.sh
+
+  - name: crear el fitxer de hosts per a que vegin els workspace a la 192.168.20
+    copy: src=/root/metro-cluster.hosts dest=/etc/hosts
+
+  - name: creem punt de muntatge /workspace1
+    file: path=/workspace1 state=directory
+
+  - name: creem punt de muntatge /workspace2
+    file: path=/workspace2 state=directory
+
+  - name: creem punt de muntatge /workspace3
+    file: path=/workspace3 state=directory
+
+  - name: creem punt de muntatge /shared
+    file: path=/shared state=directory
+
+  - name: creem punt de muntatge /workspace5
+    file: path=/workspace5 state=directory
+
+  - name: creem el punt de muntatge /workspace6
+    file: path=/workspace6 state=directory
+
+  - name: creem el punt de muntatge /workspace7
+    file: path=/workspace7 state=directory
+
+  - name: creem el punt de muntatge /workspace8
+    file: path=/workspace8 state=directory
+
+  - name: muntem /workspace1
+    mount:
+       path: /workspace1
+       src: w1-10g:/workspace1
+       fstype: nfs
+       state: mounted
+
+  - name: muntem /workspace2
+    mount:
+       path: /workspace2
+       src: w2-10g:/workspace2
+       fstype: nfs
+       state: mounted
+
+  - name: muntem /workspace3
+    mount:
+       path: /workspace3
+       src: w3-10g:/workspace3
+       fstype: nfs
+       state: mounted
+
+  - name: muntem /shared
+    mount:
+       path: /shared
+       src: w4-10g:/shared
+       fstype: nfs
+       state: mounted
+
+  - name: muntem /workspace5
+    mount:
+       path: /workspace5
+       src: w5-10g:/workspace5
+       fstype: nfs
+       state: mounted
+
+  - name: muntem /workspace6
+    mount:
+       path: /workspace6
+       src: w6-10g:/workspace6
+       fstype: nfs
+       state: mounted
+
+  - name: muntem /workspace7
+    mount:
+       path: /workspace7
+       src: w5-10g:/workspace7
+       fstype: nfs
+       state: mounted
+
+  - name: muntem /workspace8
+    mount:
+       path: /workspace8
+       src: w6-10g:/workspace8
+       fstype: nfs
+       state: mounted
+
+
